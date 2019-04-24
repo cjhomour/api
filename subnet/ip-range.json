@@ -1,0 +1,6 @@
+{
+  "address_range": {
+    "address_start": "$ip1",
+    "address_end": "$ip2"
+  }
+}

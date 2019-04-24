@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "Subnet",
+    "apiVersion": "alauda.io/v1",
+    "spec": {
+      "cidr_block": "$cidr",
+      "block_size": 26,
+      "subnet_name": "$subnet_name",
+      "nat_outgoing": false,
+      "ipip_mode": "CrossSubnet"
+    },
+    "metadata": {
+      "name": "$subnet_name"
+    }
+  }
+]

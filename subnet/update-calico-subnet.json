@@ -1,0 +1,4 @@
+{
+  "ipip_mode": "$mode",
+  "nat_outgoing": "$nat"
+}

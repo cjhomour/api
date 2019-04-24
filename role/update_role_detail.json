@@ -1,0 +1,24 @@
+{
+    "name": "$role_name",
+    "permissions": [
+        {
+            "actions": [
+                "operation_view:view"
+            ],
+            "resource": [
+                "*"
+            ],
+            "resource_type": "operation_view"
+        },
+        {
+            "actions": [
+                "$add_permission:view"
+            ],
+            "constraints": [],
+            "resource": [
+                "*"
+            ],
+            "resource_type": "$add_permission"
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+  "resource_type": "$permission",
+  "resource": ["*"],
+  "actions": ["$permission:*"],
+  "constraints": []
+}

@@ -1,0 +1,11 @@
+kind: StorageClass
+parameters:
+  resturl: '$resturl'
+  volumetype: none
+apiVersion: storage.k8s.io/v1
+reclaimPolicy: Delete
+provisioner: kubernetes.io/glusterfs
+metadata:
+  name: $scs_name
+  annotations:
+    storageclass.kubernetes.io/is-default-class: '$is_default'

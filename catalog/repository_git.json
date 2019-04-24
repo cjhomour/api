@@ -1,0 +1,10 @@
+{
+	"branch": "$GIT_BRANCH",
+	"display_name": "",
+	"name": "$repository_name",
+	"password": "$GIT_PWD",
+	"path": "$GIT_PATH",
+	"type": "git",
+	"url": "$GIT_URL",
+	"username": "$GIT_USER"
+}

@@ -1,0 +1,115 @@
+kubernetes:
+  - apiVersion: extensions/v1beta1
+    firstTimestamp: null
+    kind: Deployment
+    lastTimestamp: null
+    metadata:
+      name: $app_name
+      namespace: $K8S_NAMESPACE
+    spec:
+      replicas: 2
+      strategy:
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app.alauda.io/name: $app_name
+            service.alauda.io/name: $app_name
+        spec:
+          affinity: {}
+          containers:
+          - image: $IMAGE
+            imagePullPolicy: Always
+            name: $app_name
+            resources:
+              limits:
+                cpu: 30m
+                memory: 40M
+              requests:
+                cpu: 30m
+                memory: 40M
+            env:
+              - name: updateservice
+                value: updateservice
+              - name: __ALAUDA_FILE_LOG_PATH__
+                value: /var/*.txt
+              - name: cm
+                valueFrom:
+                  configMapKeyRef:
+                    name: $cm_name
+                    key: $cm_key
+            envFrom:
+              - configMapRef:
+                  name: $cm_name
+            livenessProbe:
+              failureThreshold: 5
+              httpGet:
+                path: /
+                port: 80
+                scheme: HTTP
+              initialDelaySeconds: 120
+              periodSeconds: 60
+              successThreshold: 1
+              timeoutSeconds: 30
+            readinessProbe:
+              initialDelaySeconds: 120
+              periodSeconds: 60
+              timeoutSeconds: 30
+              successThreshold: 1
+              failureThreshold: 5
+              exec:
+                command:
+                  - env
+            args:
+            - -c
+            - while true; do sleep 3; echo 123; done
+            command:
+            - /bin/sh
+            volumeMounts:
+              - mountPath: /configmap/test/
+                name: configmappath
+              - name: configmapsubpath
+                mountPath: /test/configmap2/subpath
+                subPath: $cm_key
+          volumes:
+            - name: configmappath
+              configMap:
+                name: $cm_name
+            - name: configmapsubpath
+              configMap:
+                name: $cm_name
+  - apiVersion: autoscaling/v1
+    firstTimestamp: null
+    kind: HorizontalPodAutoscaler
+    lastTimestamp: null
+    metadata:
+      name: $app_name
+      namespace: $K8S_NAMESPACE
+    spec:
+      maxReplicas: 5
+      minReplicas: 1
+      scaleTargetRef:
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        name: $app_name
+  - apiVersion: v1
+    firstTimestamp: null
+    kind: Service
+    lastTimestamp: null
+    metadata:
+      annotations:
+        loadbalancer.alauda.io/bind: '[{"container_port":80,"protocol":"http","name":"$HAPROXY_NAME","port":80}]'
+      labels:
+        app.alauda.io/name: $app_name
+        app.rubick.alauda.io/name: $app_name
+        service.alauda.io/name: $app_name
+      name: $app_name
+      namespace: $K8S_NAMESPACE
+    spec:
+      ports:
+      - name: 22-22
+        port: 22
+        protocol: TCP
+        targetPort: 22
+      selector:
+        service.alauda.io/name: $app_name

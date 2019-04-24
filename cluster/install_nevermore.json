@@ -1,0 +1,12 @@
+{
+  "config": {
+    "type": "official",
+    "storage": {
+      "read_log_source": "default",
+      "write_log_source": "default"
+    }
+  },
+  "values_yaml_content": "$values_yaml_content"
+}
+
+

@@ -1,0 +1,55 @@
+{
+  "namespace": {
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+      "name": "$K8S_NAMESPACE"
+    }
+  },
+  "resourcequota": {
+    "apiVersion": "v1",
+    "kind": "ResourceQuota",
+    "metadata": {
+      "name": "default",
+      "namespace": "$K8S_NAMESPACE"
+    },
+    "spec": {
+      "hard": {
+        "requests.cpu": 100,
+        "requests.memory": "100G",
+        "requests.storage": "100G",
+        "pods": 111,
+        "persistentvolumeclaims": "$pvcsize",
+        "limits.cpu": 100,
+        "limits.memory": "100G"
+      }
+    }
+  },
+  "limitrange": {
+    "apiVersion": "v1",
+    "kind": "LimitRange",
+    "metadata": {
+      "name": "default",
+      "namespace": "$K8S_NAMESPACE"
+    },
+    "spec": {
+      "limits": [
+        {
+          "default": {
+            "memory": "1G",
+            "cpu": 1
+          },
+          "defaultRequest": {
+            "memory": "50M",
+            "cpu": "0.05"
+          },
+          "max": {
+            "cpu": 8,
+            "memory": "8G"
+          },
+          "type": "Container"
+        }
+      ]
+    }
+  }
+}

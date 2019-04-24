@@ -1,0 +1,9 @@
+requests==2.18.4
+pytest
+pytest-html
+pytest-rerunfailures
+bs4
+flake8
+pexpect
+pyyaml
+qcloudapi-sdk-python

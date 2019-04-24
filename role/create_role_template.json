@@ -1,0 +1,20 @@
+{
+    "description": "e2e",
+    "display_name": "e2e",
+    "name": "$role_template_name",
+    "permissions": [
+        {
+            "actions": [
+                "application:*"
+            ],
+            "constraints": [],
+            "resource": [
+                "*"
+            ],
+            "resource_type": "application"
+        }
+    ],
+    "scope": {
+        "cluster": true
+    }
+}

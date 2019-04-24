@@ -1,0 +1,67 @@
+resource:
+  description: $description
+namespace: $K8S_NAMESPACE
+kubernetes:
+  - apiVersion: extensions/v1beta1
+    firstTimestamp: null
+    kind: Deployment
+    lastTimestamp: null
+    metadata:
+      name: $app_name
+      namespace: $K8S_NAMESPACE
+    spec:
+      replicas: 1
+      strategy:
+        type: RollingUpdate
+      selector:
+        matchLabels:
+          service.alauda.io/name: $app_name
+      template:
+        metadata:
+          labels:
+            service.alauda.io/name: $app_name
+        spec:
+          affinity: {}
+          containers:
+          - image: $IMAGE
+            imagePullPolicy: Always
+            name: $app_name
+            resources:
+              limits:
+                cpu: 20m
+                memory: 50M
+              requests:
+                cpu: 20m
+                memory: 50M
+          - image: $IMAGE
+            imagePullPolicy: Always
+            name: $app_name-many
+            resources:
+              limits:
+                cpu: 20m
+                memory: 50M
+              requests:
+                cpu: 20m
+                memory: 50M
+            livenessProbe:
+              initialDelaySeconds: 120
+              periodSeconds: 60
+              timeoutSeconds: 30
+              successThreshold: 1
+              failureThreshold: 5
+              tcpSocket:
+                port: 80
+  - apiVersion: autoscaling/v1
+    firstTimestamp: null
+    kind: HorizontalPodAutoscaler
+    lastTimestamp: null
+    metadata:
+      name: $app_name
+      namespace: $K8S_NAMESPACE
+    spec:
+      maxReplicas: 20
+      minReplicas: 1
+      scaleTargetRef:
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        name: $app_name

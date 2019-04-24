@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "name": "$newapp_name",
+    "namespace": "$K8S_NAMESPACE",
+    "displayName": ""
+  },
+  "kubernetes": [
+    {
+      "apiVersion": "apps/v1beta1",
+      "kind": "StatefulSet",
+      "metadata": {
+        "name": "$newapp_name",
+        "namespace": "$K8S_NAMESPACE"
+      },
+      "spec": {
+        "replicas": 1,
+        "template": {
+          "spec": {
+            "containers": [
+              {
+                "name": "$newapp_name",
+                "image": "$IMAGE",
+                "resources": {
+                  "requests": {
+                    "cpu": "10m",
+                    "memory": "10M"
+                  }
+                },
+                "env": [],
+                "envFrom": [],
+                "command": [],
+                "volumeMounts": []
+              }
+            ],
+            "volumes": [],
+            "hostNetwork": false
+          },
+          "metadata": {
+            "labels": {
+              "service.alauda.io/name": "statefulset-$newapp_name"
+            },
+            "annotations": {
+              "subnet.alauda.io/ipAddrs": "$subnet_ip"
+            }
+          }
+        },
+        "strategy": {
+          "type": "OnDelete"
+        },
+        "serviceName": "$newapp_name"
+      }
+    },
+    {
+      "spec": {
+        "minReplicas": 1,
+        "maxReplicas": 2,
+        "scaleTargetRef": {
+          "apiVersion": "extensions/v1beta1",
+          "kind": "StatefulSet",
+          "name": "$newapp_name"
+        }
+      },
+      "apiVersion": "autoscaling/v1",
+      "kind": "HorizontalPodAutoscaler",
+      "metadata": {
+        "name": "$newapp_name"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "annotations": {
+          "loadbalancer.alauda.io/bind": "[]"
+        },
+        "name": "$newapp_name"
+      },
+      "spec": {
+        "ports": [
+          {
+            "port": 80,
+            "targetPort": 80,
+            "name": "80-80",
+            "protocol": "TCP"
+          }
+        ],
+        "selector": {
+          "service.alauda.io/name": "statefulset-$newapp_name",
+          "app.alauda.io/name": "$newapp_name.$K8S_NAMESPACE"
+        },
+        "clusterIP": "None"
+      }
+    }
+  ]
+}

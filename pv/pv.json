@@ -1,0 +1,26 @@
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "$pv_name",
+    "annotations": {
+      "e2e": "hostPath"
+    },
+    "labels": {
+      "e2e": "hostPath"
+    }
+  },
+  "spec": {
+    "capacity": {
+      "storage": "$sizeGi"
+    },
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "persistentVolumeReclaimPolicy": "Retain",
+    "hostPath": {
+      "path": "/test/hostpath"
+    }
+  }
+}
+

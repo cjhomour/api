@@ -1,0 +1,17 @@
+{
+    "name": "$role_name",
+    "parents": [],
+    "permissions": [
+        {
+            "actions": [
+                "operation_view:*"
+            ],
+            "constraints": [],
+            "resource": [
+                "*"
+            ],
+            "resource_type": "operation_view"
+        }
+    ],
+    "template_uuid": ""
+}
